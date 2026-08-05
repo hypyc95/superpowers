@@ -22,24 +22,28 @@ Every project goes through this process. A todo list, a single-function utility,
 You MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits
-2. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Research first, if the design needs grounding** — only when it touches unfamiliar technology, an external API/library, or a domain where current best practices matter. Skip for self-contained design questions. See the Research section below.
-5. **Propose 2-3 approaches** — with trade-offs and your recommendation
-6. **Present design** — in sections scaled to their complexity, get user approval after each section
-7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-9. **User reviews written spec** — ask user to review the spec file before proceeding
-10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+2. **Set the goal — research is MANDATORY here** — state what "done" means and what this deliberately is not, and ground it in a research pass before you write it down. This step is never skipped, on any project, however simple it looks. Get the goal confirmed before moving on. See the Goal-Setting section below.
+3. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
+4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+5. **Research again, if the approaches need deeper grounding** — optional second pass, only when the goal-stage research left implementation questions open. See the Research section below.
+6. **Propose 2-3 approaches** — with trade-offs and your recommendation
+7. **Present design** — in sections scaled to their complexity, get user approval after each section
+8. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+9. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+10. **User reviews written spec** — ask user to review the spec file before proceeding
+11. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
 ```dot
 digraph brainstorming {
     "Explore project context" [shape=box];
+    "Research the goal\n(MANDATORY, never skipped)" [shape=box];
+    "State goal + non-goals" [shape=box];
+    "User confirms the goal?" [shape=diamond];
     "Ask clarifying questions" [shape=box];
-    "Unfamiliar tech or best-practices\nterritory?" [shape=diamond];
-    "Research to ground the options" [shape=box];
+    "Implementation questions\nstill open?" [shape=diamond];
+    "Deeper research pass" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
@@ -48,11 +52,15 @@ digraph brainstorming {
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
 
-    "Explore project context" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Unfamiliar tech or best-practices\nterritory?";
-    "Unfamiliar tech or best-practices\nterritory?" -> "Research to ground the options" [label="yes"];
-    "Unfamiliar tech or best-practices\nterritory?" -> "Propose 2-3 approaches" [label="no"];
-    "Research to ground the options" -> "Propose 2-3 approaches";
+    "Explore project context" -> "Research the goal\n(MANDATORY, never skipped)";
+    "Research the goal\n(MANDATORY, never skipped)" -> "State goal + non-goals";
+    "State goal + non-goals" -> "User confirms the goal?";
+    "User confirms the goal?" -> "State goal + non-goals" [label="no, revise"];
+    "User confirms the goal?" -> "Ask clarifying questions" [label="yes"];
+    "Ask clarifying questions" -> "Implementation questions\nstill open?";
+    "Implementation questions\nstill open?" -> "Deeper research pass" [label="yes"];
+    "Implementation questions\nstill open?" -> "Propose 2-3 approaches" [label="no"];
+    "Deeper research pass" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
@@ -68,6 +76,18 @@ digraph brainstorming {
 
 ## The Process
 
+**Setting the goal (always — and research it first):**
+
+Before any clarifying questions, pin down what "done" means. A design approved against a goal that was never stated is approved against nothing, and the drift only becomes visible during implementation, when it is expensive.
+
+The research pass here is **mandatory. There is no "too simple to need research" case** — the same rationalization the anti-pattern section rejects for designs applies to goals. A goal set purely from recall is a goal set against a world that may have moved: the library already does this, the platform forbids it, the constraint you assumed is gone. Finding that out now costs one round trip; finding it out after the spec costs the spec.
+
+1. **Write the open questions about the goal** — what would have to be true for this to be worth building, and what do you not actually know? Be specific; "research X" is not a question.
+2. **Go look.** Match the lookup to the gap (see the Research section below for the mechanics and tools).
+3. **State the goal and the non-goals** — one short paragraph: what "done" looks like, how it will be checked, and what this deliberately is *not* going to do. Non-goals are not optional; they are the only thing that catches a good idea that simply was not asked for.
+4. **Report what the research changed** — including "it changed nothing", said explicitly.
+5. **Get the goal confirmed** before moving to clarifying questions. Re-check it at every later approval gate.
+
 **Understanding the idea:**
 
 - Check out the current project state first (files, docs, recent commits)
@@ -78,24 +98,26 @@ digraph brainstorming {
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
-**Research (only when the design needs grounding):**
+**Research:**
 
-Approaches proposed from training knowledge alone go stale, and they go stale silently. Before proposing approaches, decide whether this design needs external grounding.
+Approaches proposed from training knowledge alone go stale, and they go stale silently.
 
-Research when the design touches:
+Research runs at two points. The **goal-stage pass is mandatory** — see the section above; it always happens. The **second pass, before proposing approaches, is optional**: run it only when the goal-stage research left implementation questions open. Both passes use the mechanics below.
+
+A second pass is worth it when the design touches:
 
 - a technology, framework, or version you have not worked with in this project
 - an external API, library, or service whose current interface you would be recalling rather than reading
 - a domain where "current best practice" is the actual question (security, auth, data retention, accessibility, pricing models)
 
-Skip research when the design is self-contained — a refactor inside code you can read, a UX wording choice, a config change. Do not force a research pass on every brainstorm; an unnecessary one costs a round trip and adds nothing.
+Skip the second pass when the design is self-contained — a refactor inside code you can read, a UX wording choice, a config change. Skipping it never means skipping the goal-stage pass, which has no exceptions.
 
-When it is triggered:
+Mechanics for either pass:
 
 1. **Name what you don't know** — write the specific open questions, not "research X". Vague questions produce vague findings.
 2. **Match the lookup to the size of the gap.** For one or two focused questions, do a grounded lookup yourself (the `google-ai-mode-skill` is a good fit if available; a documentation fetch is fine too). For a genuinely multi-source comparison — evaluating several tools, surveying how a whole domain does something — draft a paste-ready research prompt (use `prompt-master` if available) and hand it to your human partner to run in their own research tool, rather than burning the session on it.
-3. **Report what you found before proposing** — a few lines: what is true now, what surprised you, what it rules out. Cite sources.
-4. **Fold it into the approaches** — the findings must visibly shape the 2-3 options. If research changed nothing, say so explicitly.
+3. **Report what you found before moving on** — a few lines: what is true now, what surprised you, what it rules out. Cite sources.
+4. **Fold it into the goal, then into the approaches** — the findings must visibly shape what "done" means and the 2-3 options. If research changed nothing, say so explicitly.
 
 **Exploring approaches:**
 
