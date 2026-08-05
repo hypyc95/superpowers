@@ -25,13 +25,12 @@ You MUST create a task for each of these items and complete them in order:
 2. **Set the goal — research is MANDATORY here** — state what "done" means and what this deliberately is not, and ground it in a research pass before you write it down. This step is never skipped, on any project, however simple it looks. Get the goal confirmed before moving on. See the Goal-Setting section below.
 3. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-5. **Research again, if the approaches need deeper grounding** — optional second pass, only when the goal-stage research left implementation questions open. See the Research section below.
-6. **Propose 2-3 approaches** — with trade-offs and your recommendation
-7. **Present design** — in sections scaled to their complexity, get user approval after each section
-8. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-9. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-10. **User reviews written spec** — ask user to review the spec file before proceeding
-11. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+5. **Propose 2-3 approaches** — with trade-offs and your recommendation, grounded in what the research turned up
+6. **Present design** — in sections scaled to their complexity, get user approval after each section
+7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+9. **User reviews written spec** — ask user to review the spec file before proceeding
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -42,8 +41,6 @@ digraph brainstorming {
     "State goal + non-goals" [shape=box];
     "User confirms the goal?" [shape=diamond];
     "Ask clarifying questions" [shape=box];
-    "Implementation questions\nstill open?" [shape=diamond];
-    "Deeper research pass" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
     "User approves design?" [shape=diamond];
@@ -57,10 +54,7 @@ digraph brainstorming {
     "State goal + non-goals" -> "User confirms the goal?";
     "User confirms the goal?" -> "State goal + non-goals" [label="no, revise"];
     "User confirms the goal?" -> "Ask clarifying questions" [label="yes"];
-    "Ask clarifying questions" -> "Implementation questions\nstill open?";
-    "Implementation questions\nstill open?" -> "Deeper research pass" [label="yes"];
-    "Implementation questions\nstill open?" -> "Propose 2-3 approaches" [label="no"];
-    "Deeper research pass" -> "Propose 2-3 approaches";
+    "Ask clarifying questions" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
     "User approves design?" -> "Present design sections" [label="no, revise"];
@@ -83,7 +77,7 @@ Before any clarifying questions, pin down what "done" means. A design approved a
 The research pass here is **mandatory. There is no "too simple to need research" case** — the same rationalization the anti-pattern section rejects for designs applies to goals. A goal set purely from recall is a goal set against a world that may have moved: the library already does this, the platform forbids it, the constraint you assumed is gone. Finding that out now costs one round trip; finding it out after the spec costs the spec.
 
 1. **Write the open questions about the goal** — what would have to be true for this to be worth building, and what do you not actually know? Be specific; "research X" is not a question.
-2. **Go look.** Match the lookup to the gap (see the Research section below for the mechanics and tools).
+2. **Go look.** Match the lookup to the gap (see Research mechanics below for how, and which tool).
 3. **State the goal and the non-goals** — one short paragraph: what "done" looks like, how it will be checked, and what this deliberately is *not* going to do. Non-goals are not optional; they are the only thing that catches a good idea that simply was not asked for.
 4. **Report what the research changed** — including "it changed nothing", said explicitly.
 5. **Get the goal confirmed** before moving to clarifying questions. Re-check it at every later approval gate.
@@ -98,21 +92,13 @@ The research pass here is **mandatory. There is no "too simple to need research"
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
-**Research:**
+**Research mechanics:**
 
-Approaches proposed from training knowledge alone go stale, and they go stale silently.
+There is exactly one research pass, and it happens at the goal-setting step above. Nowhere else, and never skipped. Goals and approaches built on training-knowledge recall alone go stale, and they go stale silently — the library already does this, the platform forbids it, the constraint you assumed is gone.
 
-Research runs at two points. The **goal-stage pass is mandatory** — see the section above; it always happens. The **second pass, before proposing approaches, is optional**: run it only when the goal-stage research left implementation questions open. Both passes use the mechanics below.
+Pay particular attention when the work touches a technology or version you have not used in this project, an external API or service whose current interface you would be recalling rather than reading, or a domain where "current best practice" is the actual question (security, auth, data retention, accessibility, pricing). These are where stale recall is most expensive — but they are not a gate. The pass runs regardless; on a genuinely self-contained change it is simply short.
 
-A second pass is worth it when the design touches:
-
-- a technology, framework, or version you have not worked with in this project
-- an external API, library, or service whose current interface you would be recalling rather than reading
-- a domain where "current best practice" is the actual question (security, auth, data retention, accessibility, pricing models)
-
-Skip the second pass when the design is self-contained — a refactor inside code you can read, a UX wording choice, a config change. Skipping it never means skipping the goal-stage pass, which has no exceptions.
-
-Mechanics for either pass:
+How to run it:
 
 1. **Name what you don't know** — write the specific open questions, not "research X". Vague questions produce vague findings.
 2. **Match the lookup to the size of the gap.** For one or two focused questions, do a grounded lookup yourself (the `google-ai-mode-skill` is a good fit if available; a documentation fetch is fine too). For a genuinely multi-source comparison — evaluating several tools, surveying how a whole domain does something — draft a paste-ready research prompt (use `prompt-master` if available) and hand it to your human partner to run in their own research tool, rather than burning the session on it.
