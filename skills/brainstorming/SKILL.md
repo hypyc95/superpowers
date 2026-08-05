@@ -28,7 +28,7 @@ You MUST create a task for each of these items and complete them in order:
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation, grounded in what the research turned up
 6. **Present design** — in sections scaled to their complexity, get user approval after each section
 7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope, and an explicit Non-goals section (see below)
 9. **User reviews written spec** — ask user to review the spec file before proceeding
 10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
@@ -149,6 +149,7 @@ After writing the spec document, look at it with fresh eyes:
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
 4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+5. **Non-goals check:** Does the spec carry an explicit Non-goals section, and does it still match the goal confirmed at step 2? A spec without non-goals cannot catch a good idea that was never asked for.
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
@@ -158,6 +159,8 @@ After the spec review loop passes, ask the user to review the written spec befor
 > "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+
+Re-read the non-goals alongside the goal at every approval gate. A design that has grown past them is not a revision, it is a new goal — take it back to step 2 rather than absorbing it silently.
 
 **Implementation:**
 
