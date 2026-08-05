@@ -1,9 +1,9 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "superpowers-fork",
+  "description": "Personal fork of the Superpowers core skills library, tracking upstream obra/superpowers",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "Hynek",
+    "url": "https://github.com/hypyc95"
   },
   "plugins": [
     {
