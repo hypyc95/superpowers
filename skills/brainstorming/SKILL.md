@@ -7,22 +7,93 @@ description: "You MUST use this before any creative work - creating features, bu
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+Start by classifying how much process the request needs, then work
+through your path: understand the context, refine the idea, present a
+design, and get your human partner's approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Do NOT invoke any implementation skill, write any code, scaffold any
+project, or take any implementation action until you have told your
+human partner what you intend and they have approved it. This applies
+to EVERY task on EVERY path below — the ceremony scales with the task;
+the approval gate never does.
 </HARD-GATE>
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+## Three Paths
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+Before your first question, classify the request and say the
+classification out loud — "this looks bounded, so I'll present a short
+design here rather than write a spec" — so your human partner can
+override it:
+
+- **Spike** — a feasibility question ("can we...", "is it possible...",
+  "quick and dirty is fine") whose output is an answer, not code you
+  keep. Present the question and what you'll try in 2-3 sentences, get
+  a nod, then find out as cheaply as correctness allows. No design
+  doc, no spec file. Report findings as a recommendation; anything you
+  built stays labeled throwaway.
+- **Bounded** — a well-scoped change to code that already exists in
+  this repo: a new flag, a small endpoint, a one-file fix.
+  Understanding the kind of app is not enough — bounded means the flow
+  you are changing is already here to read. If there is no existing
+  flow to change, the task is not bounded. Ask the clarifying
+  questions that matter, present a short design IN CHAT (a few
+  sentences to a few short paragraphs), and STOP. Implementation
+  starts only after your human partner says yes to that design — a
+  bounded task's approval is as hard a gate as an architectural
+  one. No spec file, no implementation plan document.
+- **Architectural** — new projects, new subsystems, changes that
+  restructure how components fit together or alter interfaces others
+  depend on. Follow the full process: questions, approaches, sectioned
+  design, written spec, then the writing-plans skill.
+
+When in doubt between two paths, take the heavier one. The ratchet is
+one-way: hidden complexity discovered mid-task upgrades the path —
+stop, say so, and step up. Nothing downgrades mid-task.
+
+## Anti-Pattern: "Too Simple To Need Approval"
+
+Every path ends with your human partner approving your intent before
+implementation. A todo list, a single-function utility, a config
+change — the design may be two sentences in chat, but you MUST present
+it and get approval. "Simple" tasks are where unexamined assumptions
+cause the most wasted work. What scales with simplicity is the
+artifact, never the approval.
+
+## Red Flags
+
+| Thought | Reality |
+|---------|---------|
+| "This is too simple to need a design" | Simple means a short design, not no design. Two sentences in chat, then approval. |
+| "I'll call it bounded and skip the spec" | Reaching for a label to skip work IS the doubt — take the heavier path. |
+| "It's bounded and the design is obvious — I'll start while they read it" | The gate is the approval, not the design's length. Present, then stop until you hear yes. |
+| "I understand this kind of app, so it's bounded" | Bounded measures the repo, not your familiarity. A new project has no existing flow — it is architectural. |
+| "The spike works, so I'll keep the code" | A spike's output is an answer. Keeping the code is a new request — classify it. |
+| "It grew, but I'm almost done — no need to re-classify" | Hidden complexity upgrades the path mid-task. Stop and say so. |
+| "They approved the spike, so the follow-up change is approved too" | Each task gets its own classification and its own approval. |
 
 ## Checklist
 
-You MUST create a task for each of these items and complete them in order:
+Classify first, announce the path, then create a task for each item on
+your path and complete them in order.
 
+**Spike:**
+1. **Explore project context** — enough to frame the probe
+2. **Present question + probe plan** — 2-3 sentences
+3. **Get approval** — a nod is enough
+4. **Investigate** — as cheaply as correctness allows
+5. **Report findings** — a recommendation; label anything built as throwaway
+
+**Bounded:**
 1. **Explore project context** — check files, docs, recent commits
-2. **Set the goal — research is MANDATORY here** — state what "done" means and what this deliberately is not, and ground it in a research pass before you write it down. This step is never skipped, on any project, however simple it looks. Get the goal confirmed before moving on. See the Goal-Setting section below.
+2. **Ask clarifying questions** — one at a time, the ones that matter
+3. **Present short design in chat** — approach, files touched, testing
+4. **Get approval** — STOP and wait for an explicit yes; presenting the design and starting in the same breath is skipping the gate
+5. **Implement** — proceed with the normal development workflow (TDD applies); no plan document
+
+**Architectural:**
+1. **Explore project context** — check files, docs, recent commits
+2. **Set the goal — research is MANDATORY here** — state what "done" means and what this deliberately is not, and ground it in a research pass before you write it down. This step is never skipped once the task is architectural, however simple it looks. Get the goal confirmed before moving on. See the Goal-Setting section below.
 3. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 4. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 5. **Propose 2-3 approaches** — with trade-offs and your recommendation, grounded in what the research turned up
@@ -36,8 +107,15 @@ You MUST create a task for each of these items and complete them in order:
 
 ```dot
 digraph brainstorming {
+    "Classify: spike / bounded / architectural" [shape=diamond];
+    "Present question + probe (2-3 sentences)" [shape=box];
+    "Ask clarifying questions (bounded)" [shape=box];
+    "Present short design in chat" [shape=box];
+    "Human approves?" [shape=diamond];
+    "Investigate; report recommendation" [shape=doublecircle];
+    "Implement via normal workflow (no plan doc)" [shape=doublecircle];
     "Explore project context" [shape=box];
-    "Research the goal\n(MANDATORY, never skipped)" [shape=box];
+    "Research the goal\n(MANDATORY on this path)" [shape=box];
     "State goal + non-goals" [shape=box];
     "User confirms the goal?" [shape=diamond];
     "Ask clarifying questions" [shape=box];
@@ -48,9 +126,19 @@ digraph brainstorming {
     "Spec self-review\n(fix inline)" [shape=box];
     "User reviews spec?" [shape=diamond];
     "Invoke writing-plans skill" [shape=doublecircle];
+    "Hidden complexity? Upgrade path" [shape=box];
 
-    "Explore project context" -> "Research the goal\n(MANDATORY, never skipped)";
-    "Research the goal\n(MANDATORY, never skipped)" -> "State goal + non-goals";
+    "Classify: spike / bounded / architectural" -> "Present question + probe (2-3 sentences)" [label="spike"];
+    "Classify: spike / bounded / architectural" -> "Ask clarifying questions (bounded)" [label="bounded"];
+    "Classify: spike / bounded / architectural" -> "Explore project context" [label="architectural"];
+    "Present question + probe (2-3 sentences)" -> "Human approves?";
+    "Ask clarifying questions (bounded)" -> "Present short design in chat";
+    "Present short design in chat" -> "Human approves?";
+    "Human approves?" -> "Investigate; report recommendation" [label="spike: yes"];
+    "Human approves?" -> "Implement via normal workflow (no plan doc)" [label="bounded: yes"];
+    "Hidden complexity? Upgrade path" -> "Classify: spike / bounded / architectural";
+    "Explore project context" -> "Research the goal\n(MANDATORY on this path)";
+    "Research the goal\n(MANDATORY on this path)" -> "State goal + non-goals";
     "State goal + non-goals" -> "User confirms the goal?";
     "User confirms the goal?" -> "State goal + non-goals" [label="no, revise"];
     "User confirms the goal?" -> "Ask clarifying questions" [label="yes"];
@@ -66,21 +154,36 @@ digraph brainstorming {
 }
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**Terminal states are path-bound.** Architectural: the ONLY skill you
+invoke after brainstorming is writing-plans — never frontend-design,
+mcp-builder, or any other implementation skill. Bounded: after
+approval, implementation proceeds directly through the normal
+development workflow; no plan document. Spike: the terminal state is a
+reported recommendation.
 
 ## The Process
 
-**Setting the goal (always — and research it first):**
+The subsections below serve the bounded and architectural paths (a
+spike stops at "present the probe, get a nod"). Sections from
+**Exploring approaches** onward are architectural-path depth — for
+bounded work, context plus a few questions plus a short in-chat design
+is the whole process.
+
+**Setting the goal (architectural path — and research it first):**
+
+This step belongs to the architectural path. A spike states its probe; a bounded change states its approach in chat. Neither writes a goal paragraph. Everything below applies once the classification is architectural.
 
 Before any clarifying questions, pin down what "done" means. A design approved against a goal that was never stated is approved against nothing, and the drift only becomes visible during implementation, when it is expensive.
 
-The research pass here is **mandatory. There is no "too simple to need research" case** — the same rationalization the anti-pattern section rejects for designs applies to goals. A goal set purely from recall is a goal set against a world that may have moved: the library already does this, the platform forbids it, the constraint you assumed is gone. Finding that out now costs one round trip; finding it out after the spec costs the spec.
+The research pass here is **mandatory on the architectural path. There is no "too simple to need research" case** — the same rationalization the anti-pattern section rejects for designs applies to goals. A goal set purely from recall is a goal set against a world that may have moved: the library already does this, the platform forbids it, the constraint you assumed is gone. Finding that out now costs one round trip; finding it out after the spec costs the spec.
 
 1. **Write the open questions about the goal** — what would have to be true for this to be worth building, and what do you not actually know? Be specific; "research X" is not a question.
 2. **Go look.** Match the lookup to the gap (see Research mechanics below for how, and which tool).
 3. **State the goal and the non-goals** — one short paragraph: what "done" looks like, how it will be checked, and what this deliberately is *not* going to do. Non-goals are not optional; they are the only thing that catches a good idea that simply was not asked for.
 4. **Report what the research changed** — including "it changed nothing", said explicitly.
 5. **Get the goal confirmed** before moving to clarifying questions. Re-check it at every later approval gate.
+
+If a bounded task turns out to need this — the API you were going to call may not exist any more — that is hidden complexity. Upgrade the path per the one-way ratchet, then run this step.
 
 **Understanding the idea:**
 
@@ -92,9 +195,9 @@ The research pass here is **mandatory. There is no "too simple to need research"
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
 
-**Research mechanics:**
+**Research mechanics (architectural path):**
 
-There is exactly one research pass, and it happens at the goal-setting step above. Nowhere else, and never skipped. Goals and approaches built on training-knowledge recall alone go stale, and they go stale silently — the library already does this, the platform forbids it, the constraint you assumed is gone.
+On the architectural path there is exactly one research pass, and it happens at the goal-setting step above. Nowhere else, and never skipped on that path. Goals and approaches built on training-knowledge recall alone go stale, and they go stale silently — the library already does this, the platform forbids it, the constraint you assumed is gone.
 
 Pay particular attention when the work touches a technology or version you have not used in this project, an external API or service whose current interface you would be recalling rather than reading, or a domain where "current best practice" is the actual question (security, auth, data retention, accessibility, pricing). These are where stale recall is most expensive — but they are not a gate. The pass runs regardless; on a genuinely self-contained change it is simply short.
 
@@ -133,7 +236,7 @@ How to run it:
 - Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
 - Don't propose unrelated refactoring. Stay focused on what serves the current goal.
 
-## After the Design
+## After the Design (architectural path)
 
 **Documentation:**
 
