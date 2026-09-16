@@ -4,7 +4,7 @@ Superpowers is a complete software development methodology for your coding agent
 
 ## Fork divergences
 
-This is a personal fork of [obra/superpowers](https://github.com/obra/superpowers). Base: upstream `v6.3.0`. Fork version: `6.3.0-hynek.1`.
+This is a personal fork of [obra/superpowers](https://github.com/obra/superpowers). Base: upstream `v6.3.0`. Fork version: `6.3.1-hynek.1`.
 
 Everything below is the complete list of what this fork changes. Read it before merging a new upstream release — it is the merge map.
 
@@ -14,7 +14,7 @@ Everything below is the complete list of what this fork changes. Read it before 
 | `skills/brainstorming/SKILL.md` | Adds a **mandatory research pass** on the architectural path, plus a "Research mechanics" section covering how to run it and when to hand the lookup to a human's own research tool. | A goal set from recall alone is set against a world that may have moved. Finding that out after the spec costs the spec. |
 | `skills/brainstorming/SKILL.md` | Makes **Non-goals** a checked artifact in the spec self-review, re-read at every approval gate. | Non-goals are the only thing that catches a good idea that was never asked for. |
 | `README.md` | Removes upstream's "We're Hiring" section; adds this section. | Not applicable to a personal fork. |
-| `.claude-plugin/*.json` | Version carries a `-hynek.N` suffix; marketplace is named `superpowers-fork`. | Keeps the local plugin-cache staleness signal honest. |
+| `.claude-plugin/*.json` | Version is `<upstream-next-patch>-hynek.N`; marketplace is named `superpowers-fork`. | Claude Code holds the cached copy until the version string changes, so pushing commits alone never reaches an installed plugin. The pre-release suffix sorts below a real upstream release of that patch, so upstream still reads as an upgrade. |
 
 ### Scope of the brainstorming divergence
 
@@ -30,11 +30,12 @@ git fetch --tags up
 git merge vX.Y.Z
 ```
 
-Expect conflicts in exactly two places: the version strings in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (resolve to `X.Y.Z-hynek.1`), and `skills/brainstorming/SKILL.md` wherever upstream has touched the checklist, the process-flow graph, or the prose around goal-setting. Resolve the brainstorming conflict by keeping upstream's structure and re-attaching the fork's steps to the architectural path.
+Expect conflicts in exactly two places: the version strings in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (resolve to `X.Y.(Z+1)-hynek.1` — the upstream base's **next patch** with the pre-release suffix, so the fork still sorts below a future real upstream `X.Y.Z+1` and a later upstream release reads as an upgrade, never a downgrade), and `skills/brainstorming/SKILL.md` wherever upstream has touched the checklist, the process-flow graph, or the prose around goal-setting. Resolve the brainstorming conflict by keeping upstream's structure and re-attaching the fork's steps to the architectural path.
 
-After merging, refresh the local plugin cache or the update stays invisible with no error:
+After merging, refresh the local plugin cache or the update stays invisible with no error. Both commands are needed, in this order, and the bare plugin name fails with `Plugin "superpowers" not found`:
 
 ```
+claude plugin marketplace update superpowers-fork
 claude plugin update superpowers@superpowers-fork
 ```
 
